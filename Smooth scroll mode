@@ -1,0 +1,6 @@
+حالت اسکرول نرم
+
+function enqueue_smooth_scroll_script() {  
+    wp_enqueue_script('smooth-scroll', 'https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js', array(), null, true);  
+}  
+add_action('wp_enqueue_scripts', 'enqueue_smooth_scroll_script');
