@@ -1,0 +1,45 @@
+نشون دادن زمان مطالعه مقاله ها
+
+function add_reading_time_metaboxes() { 
+    add_meta_box( 
+        'reading_time_minutes', 
+        'زمان مطالعه (دقیقه)', 
+        'reading_time_minutes_metabox_callback', 
+        'post', 
+        'side', 
+        'high' 
+    ); 
+} 
+add_action('add_meta_boxes', 'add_reading_time_metaboxes'); 
+ 
+function reading_time_minutes_metabox_callback($post) { 
+    $value = get_post_meta($post->ID, '_reading_time_minutes', true); 
+    echo '<label for="reading_time_minutes_field">زمان مطالعه مثلاً (2:30):</label>'; 
+    echo '<input type="text" id="reading_time_minutes_field" name="reading_time_minutes_field" value="' . esc_attr($value) . '" size="25" />'; 
+} 
+ 
+function save_reading_time_meta_box_data($post_id) { 
+    if (isset($_POST['reading_time_minutes_field'])) { 
+        $reading_time_minutes = sanitize_text_field($_POST['reading_time_minutes_field']); 
+        update_post_meta($post_id, '_reading_time_minutes', $reading_time_minutes); 
+    } 
+} 
+add_action('save_post', 'save_reading_time_meta_box_data'); 
+ 
+function display_manual_reading_times($content) { 
+    if (is_single()) { 
+        $reading_time_minutes = get_post_meta(get_the_ID(), '_reading_time_minutes', true); 
+        $reading_time_seconds = get_post_meta(get_the_ID(), '_reading_time_seconds', true); 
+ 
+        $reading_time_html = ''; 
+ 
+        if (!empty($reading_time_minutes)) { 
+            $reading_time_html .= '<div class="reading-time-box">زمان مطالعه: ' . esc_html($reading_time_minutes) . ' دقیقه</div>'; 
+        } 
+ 
+        $content = $reading_time_html . $content; 
+    } 
+ 
+    return $content; 
+} 
+add_filter('the_content', 'display_manual_reading_times');
