@@ -1,0 +1,15 @@
+تغییر فونت داشبورد وردپرس با فونت ویندوز 
+
+function tcDashFont()
+{
+ echo '
+ <style>
+ .wp-admin *:not(.ab-icon, .dashicons),
+ #wpadminbar *:not(.ab-icon, .dashicons) {
+  font-family: Fontname !important;
+ }
+ </style>
+ ';
+}
+add_action('admin_head', 'tcDashFont');
+add_action('wp_head', 'tcDashFont');
