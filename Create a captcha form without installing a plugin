@@ -1,5 +1,4 @@
 // ایجاد فرم کپچا بدون نصب افزونه
-
 function liamwp_my_recaptcha_keys() { 
     return [
         'sitekey' => 'SITE_KEY_HERE',  // جایگزین با Site Key خود
