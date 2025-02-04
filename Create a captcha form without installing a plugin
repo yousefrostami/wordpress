@@ -1,0 +1,56 @@
+// ایجاد فرم کپچا بدون نصب افزونه
+
+function liamwp_my_recaptcha_keys() { 
+    return [
+        'sitekey' => 'SITE_KEY_HERE',  // جایگزین با Site Key خود
+        'secret'  => 'SECRET_KEY_HERE' // جایگزین با Secret Key خود
+    ];
+}
+
+// 2. افزودن اسکریپت reCAPTCHA v3 به صفحه ورود
+function liamwp_login_enqueue_scripts() {
+    $recaptcha = liamwp_my_recaptcha_keys();
+    echo '<script src="https://www.google.com/recaptcha/api.js?render=' . $recaptcha['sitekey'] . '"></script>';
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('" . $recaptcha['sitekey'] . "', { action: 'login' }).then(function(token) {
+                    let recaptchaResponse = document.createElement('input');
+                    recaptchaResponse.setAttribute('type', 'hidden');
+                    recaptchaResponse.setAttribute('name', 'g-recaptcha-response');
+                    recaptchaResponse.setAttribute('value', token);
+                    document.forms[0].appendChild(recaptchaResponse);
+                });
+            });
+        });
+    </script>";
+}
+add_action('login_enqueue_scripts', 'liamwp_login_enqueue_scripts');
+
+// 3. بررسی امتیاز reCAPTCHA در هنگام ورود
+function liamwp_validate_recaptcha_v3($user, $password) {
+    if (!isset($_POST['g-recaptcha-response'])) {
+        return new WP_Error('recaptcha_missing', __('<center>reCAPTCHA verification failed!</center>'));
+    }
+
+    $recaptcha = liamwp_my_recaptcha_keys();
+    $response = wp_remote_post("https://www.google.com/recaptcha/api/siteverify", [
+        'body' => [
+            'secret'   => $recaptcha['secret'],
+            'response' => sanitize_text_field($_POST['g-recaptcha-response']),
+            'remoteip' => $_SERVER['REMOTE_ADDR'],
+        ]
+    ]);
+
+    if (is_wp_error($response)) {
+        return new WP_Error('recaptcha_error', __('<center>Error verifying reCAPTCHA. Please try again!</center>'));
+    }
+
+    $response_body = json_decode(wp_remote_retrieve_body($response), true);
+    if (!$response_body['success'] || $response_body['score'] < 0.5) {
+        return new WP_Error('recaptcha_failed', __('<center>Suspicious activity detected. Access denied!</center>'));
+    }
+
+    return $user;
+}
+add_filter('wp_authenticate_user', 'liamwp_validate_recaptcha_v3', 10, 2);
