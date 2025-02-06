@@ -1,0 +1,23 @@
+// پیدا کردن نام کاربری در وردپرس
+
+// ۱. غیرفعال کردن REST API برای نمایش لیست کاربران به کاربران غیرمدیر
+add_filter('rest_endpoints', function ($endpoints) {
+    if (!current_user_can('manage_options')) { 
+        unset($endpoints['/wp/v2/users']);
+        unset($endpoints['/wp/v2/users/(?P<id>[\d]+)']);
+    }
+    return $endpoints;
+});
+
+// ۲. جلوگیری از نمایش اطلاعات نویسنده با ?author=ID
+add_action('template_redirect', function () {
+    if (!is_admin() && isset($_GET['author'])) {
+        wp_redirect(home_url());
+        exit;
+    }
+});
+
+
+// نتیجه:
+// فقط مدیران سایت (کاربرانی که manage_options دارند) به REST API کاربران دسترسی دارند.
+// آدرس ?author=ID دیگر اطلاعات نویسنده را نمایش نمی‌دهد.
