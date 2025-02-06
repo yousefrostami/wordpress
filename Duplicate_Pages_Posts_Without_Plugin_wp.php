@@ -1,4 +1,3 @@
-
 /**
  * @snippet  Duplicate posts and pages without plugins
  * @author   Yousef Rostami
