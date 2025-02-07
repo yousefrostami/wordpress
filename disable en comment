@@ -1,0 +1,17 @@
+//  جلوگیری از ارسال کامنت اسپم انگلیسی
+
+add_filter('preprocess_comment', 'liamwp_disable_en_comment');
+function liamwp_disable_en_comment($comment)
+{
+	$faPubChars = ['ا', 'ل', 'م', 'ن', 'ی', 'و', 'ه'];
+	$haveFaPubChars = false;
+	foreach ($faPubChars as $faPubChar) {
+		if (str_contains($comment['comment_content'], $faPubChar)) {
+			$haveFaPubChars = true;
+		}
+	}
+	if (!$haveFaPubChars) {
+		wp_die('متاسفانه امکان ثبت دیدگاه با زبانی غیر از فارسی وجود ندارد!');
+	}
+	return $comment;
+}
