@@ -1,0 +1,118 @@
+//  اضافه کردن تقویم فارسی بدون نصب افزونه در سایت وردپرسی
+
+// 01       ابتدا فایل زیر رو در فانکشن قرار دهید
+
+require_once get_stylesheet_directory() . '/jdatetime.php';
+function convert_wp_date_to_jalali($date, $format, $timestamp) {
+    return jDateTime::date("Y/m/d", strtotime($date));
+}
+add_filter('get_the_date', 'convert_wp_date_to_jalali', 10, 3);
+add_filter('get_the_time', 'convert_wp_date_to_jalali', 10, 3);
+
+function convert_comment_date_to_jalali($date, $format, $comment) {
+    return jDateTime::date("Y/m/d", strtotime($date));
+}
+add_filter('get_comment_date', 'convert_comment_date_to_jalali', 10, 3);
+
+
+
+// 02      سپس در چایلد تم یه فایل به نام jdatetime.php ایجاد کنین 
+
+
+
+<?php
+class jDateTime
+{
+    private static $jalali = true;
+    private static $convert = true;
+    private static $timezone = null;
+
+    public static function date($format, $timestamp = false, $none = '', $time_zone = 'Asia/Tehran', $tr_num = 'en')
+    {
+        $T_sec = 0; 
+        $ts = $timestamp === false ? time() + $T_sec : self::tr_num($timestamp) + $T_sec;
+        date_default_timezone_set($time_zone);
+        $date = date('Y-m-d H:i:s', $ts);
+        list($g_y, $g_m, $g_d, $g_w) = explode('-', date('Y-m-d-w', $ts));
+        list($j_y, $j_m, $j_d) = self::gregorian_to_jalali($g_y, $g_m, $g_d);
+        $out = '';
+
+        for ($i = 0, $len = strlen($format); $i < $len; $i++) {
+            $sub = substr($format, $i, 1);
+            if ($sub == '\\') {
+                $out .= substr($format, ++$i, 1);
+                continue;
+            }
+            switch ($sub) {
+                case 'Y':
+                    $out .= $j_y;
+                    break;
+                case 'm':
+                    $out .= ($j_m < 10 ? '0' . $j_m : $j_m);
+                    break;
+                case 'd':
+                    $out .= ($j_d < 10 ? '0' . $j_d : $j_d);
+                    break;
+                case 'H':
+                    $out .= date('H', $ts);
+                    break;
+                case 'i':
+                    $out .= date('i', $ts);
+                    break;
+                case 's':
+                    $out .= date('s', $ts);
+                    break;
+                case 'l':
+                    $days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+                    $out .= $days[$g_w];
+                    break;
+                default:
+                    $out .= $sub;
+                    break;
+            }
+        }
+        return $out;
+    }
+
+    private static function tr_num($str, $mod = 'en')
+    {
+        return $mod === 'fa' ? str_replace(range(0, 9), ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'], $str) : $str;
+    }
+
+    private static function gregorian_to_jalali($g_y, $g_m, $g_d)
+    {
+        $g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        $j_days_in_month = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+
+        $gy = $g_y - 1600;
+        $gm = $g_m - 1;
+        $gd = $g_d - 1;
+        $g_day_no = 365 * $gy + intval(($gy + 3) / 4) - intval(($gy + 99) / 100) + intval(($gy + 399) / 400);
+
+        for ($i = 0; $i < $gm; $i++) {
+            $g_day_no += $g_days_in_month[$i];
+        }
+
+        if ($gm > 1 && (($gy % 4 == 0 && $gy % 100 != 0) || ($gy % 400 == 0))) {
+            $g_day_no++;
+        }
+
+        $g_day_no += $gd;
+        $j_day_no = $g_day_no - 79;
+        $j_np = intval($j_day_no / 12053);
+        $j_day_no %= 12053;
+        $jy = 979 + 33 * $j_np + 4 * intval($j_day_no / 1461);
+
+        $j_day_no %= 1461;
+        if ($j_day_no >= 366) {
+            $jy += intval(($j_day_no - 1) / 365);
+            $j_day_no = ($j_day_no - 1) % 365;
+        }
+
+        for ($i = 0; $i < 11 && $j_day_no >= $j_days_in_month[$i]; $i++) {
+            $j_day_no -= $j_days_in_month[$i];
+        }
+
+        return [$jy, $i + 1, $j_day_no + 1];
+    }
+}
