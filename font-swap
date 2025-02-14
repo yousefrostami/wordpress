@@ -1,0 +1,11 @@
+// برای اینکه فونت هاتون رو swap کنین کافه کد زیر رو قرار دهید 
+
+@font-face {
+  font-family: 'YourFontName';
+  src: url('path-to-your-font.woff2') format('woff2'), 
+       url('path-to-your-font.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
