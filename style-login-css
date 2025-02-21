@@ -131,7 +131,9 @@ function custom_login_stylesheet() {
 		p#backtoblog {
     display: none;
 }
-
+		p.forgetmenot {
+    display: none;
+}
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
