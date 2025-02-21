@@ -1,0 +1,170 @@
+/**
+ * @snippet       Custom Stylish Login Page for WordPress
+ * @how-to        Get free snippets at liamwp.com
+ * @author        Yousef Rosatmi
+ */
+function custom_login_stylesheet() {
+    ?>
+    <style type="text/css">
+        body.login {
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            display: flex;
+            flex-wrap: wrap; 
+            width: 100%;
+            max-width: 960px;
+            margin: auto;
+            height: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+        #login {
+            width: 50%;
+            padding: 8% 0 60px !important;
+            background: #fff;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; 
+      }
+        #login h1 a {
+            background-image: url('address url pictuer');
+            height: 80px;
+            width: 240px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .login form {
+            border: none;
+            box-shadow: none;
+            background: none;
+            margin-bottom: 20px; 
+            width: 100%; 
+    		border: 1px solid #fff !important;			
+			box-shadow:none !important;
+  			border-radius: 8px;
+        }
+        .login form label {
+            font-weight: bold;
+            color: #333;
+        }
+        .login form input[type="text"],
+        .login form input[type="password"] {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .login form input[type="submit"] {
+            background: #e63946;
+            color: #fff;
+            border: none;
+            padding: 10px !important;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease; 
+      }
+        .login form input[type="submit"]:hover {
+            background: #d62828;
+        }
+        #wpml-login-ls-form {
+            margin-top: 15px; 
+            text-align: center;
+            width: 100%; 
+            display: block;
+        }
+        .custom-side {
+            width: 50%; 
+            height: auto;
+            position: relative;
+            background: url('address url pictuer') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .custom-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 1;
+        }
+        .custom-side h2,
+        .custom-side p {
+            position: relative;
+            color: white;
+            z-index: 2;
+            margin: 10px 0; 
+        }
+        .custom-side h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .custom-side p {
+            font-size: 16px;
+        }
+        .wpml-login-ls {
+            display: none; 
+        }
+		a.wp-login-lost-password {
+    display: none;
+}
+		p#backtoblog {
+    display: none;
+}
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+            #login, .custom-side {
+                width: 100%;
+            }
+            #login {
+                margin-right: 0;
+            }
+        }
+    </style>
+    <?php
+}
+add_action('login_enqueue_scripts', 'custom_login_stylesheet');
+
+function custom_login_logo_url() {
+    return home_url();
+}
+add_filter('login_headerurl', 'custom_login_logo_url');
+
+function custom_login_logo_url_title() {
+    return 'صفحه اصلی سایت';
+}
+add_filter('login_headertext', 'custom_login_logo_url_title');
+
+function custom_login_html_structure() {
+    echo '<div class="login-container">';
+    echo '<div class="custom-side"><h2>به سایت ما خوش آمدید</h2><p>برای دسترسی به امکانات وارد شوید یا ثبت‌نام کنید</p></div>';
+}
+add_action('login_header', 'custom_login_html_structure', 10);
+
+function custom_login_html_close() {
+    echo '</div>';
+}
+add_action('login_footer', 'custom_login_html_close');
