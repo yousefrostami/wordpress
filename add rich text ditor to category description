@@ -1,0 +1,55 @@
+// افزودن ویرایشگر TinyMCE به توضیحات دسته‌بندی
+function add_rich_text_editor_to_category_description($tag) {
+    ?>
+    <tr class="form-field term-description-wrap">
+        <th scope="row"><label for="description"><?php _e('توضیحات', 'textdomain'); ?></label></th>
+        <td>
+            <?php
+            $settings = array(
+                'textarea_name' => 'description',
+                'media_buttons' => true,
+                'teeny'         => false,
+                'quicktags'     => true
+            );
+            wp_editor(html_entity_decode($tag->description), 'description', $settings);
+            ?>
+            <p class="description"><?php _e('توضیحات دسته‌بندی. این متن ممکن است در برخی قالب‌ها نمایش داده شود.', 'textdomain'); ?></p>
+        </td>
+    </tr>
+    <script>
+        jQuery(document).ready(function($) {
+            $('.term-description-wrap textarea').closest('.form-field').hide();
+        });
+    </script>
+    <?php
+}
+add_action('category_edit_form_fields', 'add_rich_text_editor_to_category_description', 10);
+
+// جلوگیری از حذف تگ‌های HTML هنگام ذخیره توضیحات دسته‌بندی
+remove_filter('pre_term_description', 'wp_filter_kses');
+remove_filter('term_description', 'wp_kses_data');
+
+// افزودن ویرایشگر متن به صفحه ایجاد دسته‌بندی جدید
+function add_rich_text_editor_to_add_category() {
+    ?>
+    <div class="form-field term-description-wrap">
+        <label for="description"><?php _e('توضیحات', 'textdomain'); ?></label>
+        <?php
+        $settings = array(
+            'textarea_name' => 'description',
+            'media_buttons' => true,
+            'teeny'         => false,
+            'quicktags'     => true
+        );
+        wp_editor('', 'description', $settings);
+        ?>
+        <p class="description"><?php _e('توضیحات دسته‌بندی. این متن ممکن است در برخی قالب‌ها نمایش داده شود.', 'textdomain'); ?></p>
+    </div>
+    <script>
+        jQuery(document).ready(function($) {
+            $('.term-description-wrap textarea').closest('.form-field').hide();
+        });
+    </script>
+    <?php
+}
+add_action('category_add_form_fields', 'add_rich_text_editor_to_add_category', 10);
