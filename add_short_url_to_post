@@ -1,0 +1,43 @@
+// کافیه کد زیر رو در فانکشن قرار بدین 
+
+
+// اضافه کردن لینک کوتاه به پایین هر نوشته
+function add_short_url_to_post($content) {
+    if (is_single()) {
+        global $post;
+        $short_url = wp_get_shortlink($post->ID);
+        $html = '<div class="short-url-container" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; margin: 10px 0; background: #eee; padding: 10px; border-radius: 6px; width: fit-content; max-width: 100%;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>                    
+            <a href="#" onclick="copyToClipboard(\'' . $short_url . '\')" class="copy-short-url" style="text-decoration: none; color: #333; font-weight: bold;">کپی لینک کوتاه نوشته</a>
+            <input type="text" value="' . $short_url . '" style="display:none;" id="short-url" />
+        </div>';
+        $content .= $html;
+    }
+    return $content;
+}
+add_filter('the_content', 'add_short_url_to_post');
+
+
+// اضافه کردن اسکریپت کپی کردن لینک کوتاه به کلیپ‌بورد
+function add_copy_to_clipboard_script() {
+    if (is_single()) {
+        echo "<script>
+            function copyToClipboard(text) {
+                var input = document.createElement('input');
+                input.style.position = 'absolute';
+                input.style.left = '-9999px';
+                input.setAttribute('value', text);
+                document.body.appendChild(input);
+                input.select();
+                var result = document.execCommand('copy');
+                document.body.removeChild(input);
+                alert('لینک کوتاه کپی شد: ' + text);
+                return result;
+            }
+        </script>";
+    }
+}
+add_action('wp_footer', 'add_copy_to_clipboard_script');
