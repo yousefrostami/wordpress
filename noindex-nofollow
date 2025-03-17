@@ -1,0 +1,24 @@
+برای بردن سایت در دست تعمیر بدون استفاده از کد 
+
+function mtncmd()
+{
+    if (!is_user_logged_in()){
+        wp_die('در حال بروز رسانی سایت هستیم ، از شکیبای شما سپاسگزاریم ');
+    }
+}
+add_action('get_header' , 'mtncmd');
+
+
+///و برای اینکه ربات ها بسته بشن 
+
+
+function mtncmd()
+{
+    if (!is_user_logged_in()) {
+        add_action('wp_head', function () {
+            echo '<meta name="robots" content="noindex, nofollow">';
+        });
+        wp_die('در حال بروز رسانی سایت هستیم، از شکیبایی شما سپاسگزاریم.');
+    }
+}
+add_action('get_header', 'mtncmd');
