@@ -1,0 +1,29 @@
+
+
+
+
+
+/////////////////// فانکشن برای نمایش ID دسته‌بندی‌های نوشته‌ها
+function display_category_ids() {
+    // دریافت دسته‌بندی‌ها
+    $categories = get_categories();
+
+    // شروع ساختار HTML برای نمایش دسته‌بندی‌ها
+    $output = '<ul>';
+
+    // حلقه برای مرور دسته‌بندی‌ها و استخراج ID
+    foreach ( $categories as $category ) {
+        $output .= '<li>' . $category->name . ' (ID: ' . $category->term_id . ')</li>';
+    }
+
+    // پایان ساختار HTML
+    $output .= '</ul>';
+
+    // بازگرداندن خروجی
+    return $output;
+}
+
+// ثبت شورتکد
+add_shortcode( 'category_ids', 'display_category_ids' );
+
+
