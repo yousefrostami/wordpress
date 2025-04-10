@@ -1,0 +1,78 @@
+//  زمانی که میخوایم کاربری از وی پی ان استفاده کرد یه پیام براش نمایش داده بشه که خاموش کنه یه هشدار عمومی هست  
+add_action('woocommerce_review_order_after_submit', function () {
+    echo '
+    <div style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #ff4d4f;
+        color: #fff;
+        padding: 12px 16px;
+        margin-top: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 15px;
+        animation: shake 0.5s ease-in-out infinite alternate;
+    ">
+        🚫 توجه: برای پرداخت فیلترشکن خود را خاموش کنید
+    </div>
+
+    <style>
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            50% { transform: translateX(2px); }
+            75% { transform: translateX(-2px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+    ';
+});
+
+
+
+///    زمانی که کاربر وی پی ان روشن داره میگه خاموش کن برای کسی که نداره هشدار نمایش نمیده 
+
+add_action('woocommerce_review_order_after_submit', function () {
+    echo '
+    <div id="vpn-warning" style="
+        display: none;
+        align-items: center;
+        gap: 10px;
+        background-color: #ff4d4f;
+        color: #fff;
+        padding: 12px 16px;
+        margin-top: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 15px;
+        animation: shake 0.5s ease-in-out infinite alternate;
+    ">
+        🚫 توجه: برای پرداخت، فیلترشکن خود را خاموش کنید.
+    </div>
+
+    <style>
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            50% { transform: translateX(2px); }
+            75% { transform: translateX(-2px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+
+    <script>
+        fetch("https://ipapi.co/json/")
+            .then(response => response.json())
+            .then(data => {
+                if (data.country_code !== "IR") {
+                    // کاربر از کشوری غیر از ایران متصل شده
+                    document.getElementById("vpn-warning").style.display = "flex";
+                }
+            })
+            .catch(error => {
+                console.error("خطا در بررسی موقعیت IP:", error);
+            });
+    </script>
+    ';
+});
