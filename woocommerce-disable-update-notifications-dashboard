@@ -1,0 +1,28 @@
+غیرفعال کردن اطلاعیه آپدیت در پیشخوان وردپرس
+
+
+add_action( 'admin_init', 'liamwp_hide_update_notifications_users' );
+  
+function liamwp_hide_update_notifications_users() {
+    global $menu, $submenu;
+    $user = wp_get_current_user();
+     
+    // یوزرهایی که اجازه دارند اطلاعیه اپدیت را مشاهده کنند
+    $allowed = array( 'یوزر دلخواه' );
+     
+    // مخفی کردن اطلاعیه ها برای تمامی یوزرها
+    if ( $user && isset( $user->user_login ) && ! in_array( $user->user_login, $allowed ) ) {
+        add_filter( 'pre_site_transient_update_core', 'liamwp_disable_update_notifications' );
+        add_filter( 'pre_site_transient_update_plugins', 'liamwp_disable_update_notifications' ); 
+        add_filter( 'pre_site_transient_update_themes', 'liamwp_disable_update_notifications' );
+         
+        // ALSO REMOVE THE RED UPDATE COUNTERS @ SIDEBAR MENU ITEMS
+        $menu[65][0] = 'Plugins up to date';   
+        $submenu['index.php'][10][0] = 'Updates disabled';   
+    }
+}
+  
+function liamwp_disable_update_notifications() {
+    global $wp_version;
+    return (object) array( 'last_checked' => time(), 'version_checked' => $wp_version, );
+}
