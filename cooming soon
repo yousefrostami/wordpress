@@ -1,0 +1,62 @@
+// برای زمانی که بدون نیاز به افزونه سایت رو بردن در دست تعمیر وطراحی 
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Site is created successfully! </title>
+    <style>
+        .container {
+            width: 60%;
+            margin: 10% auto 0;
+            background-color: #f0f0f0;
+            padding: 2% 5%;
+            border-radius: 10px
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+            ul li {
+                line-height: 2.3
+            }
+
+        a {
+            color: #20a53a
+        }
+        .footer {
+      position: absolute;
+      left: 0;
+      bottom: 32px;
+      width: 100%; 
+      
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .footer .btlink {
+      color: #0200ff;
+      text-decoration: none;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>You are on the previews home page. </h1>
+        <h3>This page has no specific use and you need to enter the product preview below.</h3>
+        <ul>
+            <li>We can design a professional website for you</li>
+            <li>We can have a custom design for you</li>
+            <li>We can develop your website and online business</li>
+            <li>We can boost your business</li>
+        </ul>
+        
+          <h3>SEOMAP , Enjoy the difference !!</h3>
+    </div>
+    <div class="footer">
+      Power by
+      <a class="btlink" href="https://seomap.ir/" target="_blank">SEOMAP : OUR EXPERTISE , YOUR SUCCESS</a>
+    </div> 
+</body>
+</html>
