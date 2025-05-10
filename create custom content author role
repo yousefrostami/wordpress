@@ -1,0 +1,22 @@
+//////////  نقش کاربری اختصاصی نویسنده - کاربران با این نقش فقط می‌توانند نوشته‌های خودشان را مشاهده کنند.
+
+function create_custom_content_author_role() {
+    add_role(
+        'content_author',
+        'نویسنده اختصاصی',
+        [
+            'read' => true,
+            'edit_posts' => true,
+            'delete_posts' => true,
+            'publish_posts' => true,
+            'upload_files' => true,
+            'edit_published_posts' => true,
+            // محدودسازی
+            'edit_others_posts' => false,
+            'delete_others_posts' => false,
+            'delete_published_posts' => false,
+            'manage_categories' => false,
+        ]
+    );
+}
+add_action('init', 'create_custom_content_author_role');
